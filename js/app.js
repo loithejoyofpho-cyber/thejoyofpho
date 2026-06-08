@@ -9,6 +9,37 @@ function el(tag, className, html) {
   return node;
 }
 
+/* ---------- Scroll reveal ---------- */
+const prefersReducedMotion =
+  window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let _revealObserver = null;
+function revealObserver() {
+  if (_revealObserver) return _revealObserver;
+  _revealObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+  );
+  return _revealObserver;
+}
+
+function armReveals(root) {
+  const scope = root || document;
+  const els = scope.querySelectorAll(".reveal:not(.is-visible)");
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    els.forEach((e) => e.classList.add("is-visible"));
+    return;
+  }
+  els.forEach((e) => revealObserver().observe(e));
+}
+
 function slug(text) {
   return text
     .toLowerCase()
@@ -23,8 +54,9 @@ function renderBestSellers() {
   const grid = document.getElementById("bestSellerGrid");
   if (!grid || typeof BEST_SELLERS === "undefined") return;
 
-  BEST_SELLERS.forEach((d) => {
-    const card = el("article", "dish-card");
+  BEST_SELLERS.forEach((d, i) => {
+    const card = el("article", "dish-card reveal");
+    card.style.transitionDelay = (i % 4) * 80 + "ms";
     const src = DISH_PATH + encodeURIComponent(d.img);
 
     card.innerHTML = `
@@ -60,7 +92,7 @@ function renderMenu() {
     catNav.appendChild(chip);
 
     // category block
-    const block = el("section", "menu-cat");
+    const block = el("section", "menu-cat reveal");
     block.id = id;
 
     const head = el("div", "menu-cat-head");
@@ -99,14 +131,25 @@ function setupScrollSpy() {
     .map((c) => document.querySelector(c.getAttribute("href")))
     .filter(Boolean);
 
+  const nav = document.getElementById("catNav");
+
+  function centerChip(chip) {
+    if (!nav) return;
+    // Keep the active chip visible within the horizontal strip (mobile).
+    const left = chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2;
+    nav.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
-          chips.forEach((c) =>
-            c.classList.toggle("active", c.getAttribute("href") === "#" + id)
-          );
+          chips.forEach((c) => {
+            const isActive = c.getAttribute("href") === "#" + id;
+            c.classList.toggle("active", isActive);
+            if (isActive) centerChip(c);
+          });
         }
       });
     },
@@ -191,9 +234,10 @@ function renderReviews() {
   }
 
   grid.innerHTML = "";
-  reviews.forEach((r) => {
+  reviews.forEach((r, i) => {
     const initial = (r.name || "G").trim().charAt(0).toUpperCase() || "G";
-    const card = el("article", "review-card" + (r.yours ? " is-yours" : ""));
+    const card = el("article", "review-card reveal" + (r.yours ? " is-yours" : ""));
+    card.style.transitionDelay = (i % 6) * 70 + "ms";
     card.innerHTML = `
       ${r.yours ? '<span class="review-badge">Your review</span>' : ""}
       <div class="review-head">
@@ -209,6 +253,8 @@ function renderReviews() {
       ${r.message ? `<p class="review-text">${escapeHtml(r.message)}</p>` : ""}`;
     grid.appendChild(card);
   });
+
+  armReveals(grid);
 }
 
 function escapeHtml(str) {
@@ -340,6 +386,22 @@ function setupFeedback() {
   window.addEventListener("scroll", onScroll, { passive: true });
 }
 
+/* ---------- Reveal static elements ---------- */
+function setupReveals() {
+  const selectors = [
+    ".section-head",
+    ".band",
+    ".feedback-summary",
+    ".feedback-cta",
+    ".footer-brand",
+    ".footer-col",
+  ];
+  selectors.forEach((sel) =>
+    document.querySelectorAll(sel).forEach((el) => el.classList.add("reveal"))
+  );
+  armReveals(document);
+}
+
 /* ---------- Init ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   renderBestSellers();
@@ -347,6 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderReviews();
   setupNav();
   setupFeedback();
+  setupReveals();
   const yr = document.getElementById("year");
   if (yr) yr.textContent = new Date().getFullYear();
 });
