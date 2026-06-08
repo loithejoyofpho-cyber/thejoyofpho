@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Feedback | Loi's — The Joy of Phở</title>
+  <meta name="description" content="Read reviews from guests of Loi's — The Joy of Phở, and share your own experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="assets/brand/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Top nav -->
+  <header class="site-header" id="top">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/brand/logo.png" alt="Loi's The Joy of Phở logo" />
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html#best-sellers">Best Sellers</a>
+        <a href="index.html#menu">Full Menu</a>
+        <a href="index.html#visit">Visit</a>
+        <a href="feedback.html" class="nav-feedback" aria-current="page">Feedback</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="page-hero-content">
+      <p class="hero-kicker">Cảm Nhận Khách Hàng</p>
+      <h1 class="page-hero-title">Customer Feedback</h1>
+      <p class="page-hero-sub">See what our guests are saying about The Joy of Phở — and share your own.</p>
+    </div>
+  </section>
+
+  <!-- Feedback / reviews -->
+  <section class="section feedback-section" id="feedback">
+    <div class="feedback-summary" id="feedbackSummary"><!-- injected by JS --></div>
+
+    <div class="feedback-cta">
+      <button class="btn btn-primary" id="openFeedbackBtn">Leave a Review</button>
+    </div>
+
+    <div class="review-grid" id="reviewGrid"><!-- injected by JS --></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/brand/logo.png" alt="Loi's The Joy of Phở" />
+        <p>Fine Asian Fusion &amp; Sweet</p>
+      </div>
+      <div class="footer-col">
+        <h3>Hours</h3>
+        <p>Open Daily</p>
+        <p>Until 9:30 PM</p>
+      </div>
+      <div class="footer-col">
+        <h3>Find Us</h3>
+        <p><a href="https://maps.google.com/?q=16640+Yonge+St+5B+Newmarket+ON+L3X+2N8" target="_blank" rel="noopener">16640 Yonge St #5B</a></p>
+        <p>Newmarket, ON L3X 2N8</p>
+        <p>RioCentre Newmarket</p>
+      </div>
+      <div class="footer-col">
+        <h3>Contact</h3>
+        <p><a href="tel:+19052358999">(905) 235-8999</a></p>
+        <p><a href="https://loijoyofpho.ca" target="_blank" rel="noopener">loijoyofpho.ca</a></p>
+        <p>Dine-in · Takeout · Delivery</p>
+      </div>
+    </div>
+    <p class="footer-note">© <span id="year"></span> Loi's — The Joy of Phở. Made with love.</p>
+  </footer>
+
+  <!-- Feedback popup -->
+  <div class="modal-overlay" id="feedbackModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+      <button class="modal-close" id="feedbackClose" aria-label="Close feedback">&times;</button>
+      <div class="modal-body" id="feedbackFormWrap">
+        <span class="modal-eyebrow">Cảm ơn quý khách</span>
+        <h2 class="modal-title" id="feedbackTitle">How was your visit?</h2>
+        <p class="modal-sub">We'd love to hear about your experience at The Joy of Phở.</p>
+
+        <form id="feedbackForm" novalidate>
+          <div class="rating" id="ratingStars" role="radiogroup" aria-label="Star rating">
+            <button type="button" class="star" data-value="1" aria-label="1 star">&#9733;</button>
+            <button type="button" class="star" data-value="2" aria-label="2 stars">&#9733;</button>
+            <button type="button" class="star" data-value="3" aria-label="3 stars">&#9733;</button>
+            <button type="button" class="star" data-value="4" aria-label="4 stars">&#9733;</button>
+            <button type="button" class="star" data-value="5" aria-label="5 stars">&#9733;</button>
+          </div>
+
+          <div class="field-row">
+            <input type="text" id="fbName" placeholder="Your name (optional)" autocomplete="name" />
+          </div>
+          <div class="field-row">
+            <textarea id="fbMessage" rows="4" placeholder="Tell us what you loved — or how we can improve…"></textarea>
+          </div>
+          <p class="form-error" id="fbError"></p>
+          <button type="submit" class="btn btn-primary modal-submit">Send Feedback</button>
+        </form>
+      </div>
+
+      <div class="modal-body modal-thanks" id="feedbackThanks" hidden>
+        <div class="thanks-mark">&#10003;</div>
+        <h2 class="modal-title">Cảm ơn!</h2>
+        <p class="modal-sub">Thank you for your feedback — we hope to see you again soon.</p>
+        <button type="button" class="btn btn-primary" id="feedbackDone">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/menu-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
